@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef582f759af077e866ef0bf26032d7e0",
+    "content-hash": "9ad1cf3d8fc7d75706e606f6968f7122",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1752,6 +1752,34 @@
                 "psr-3"
             ],
             "time": "2020-03-23T09:12:05+00:00"
+        },
+        {
+            "name": "symfony/annotations-pack",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/annotations-pack.git",
+                "reference": "18c762ffefaede85efa911e840ab2eb0e33993b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/annotations-pack/zipball/18c762ffefaede85efa911e840ab2eb0e33993b5",
+                "reference": "18c762ffefaede85efa911e840ab2eb0e33993b5",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "^1.4",
+                "doctrine/cache": "^1.6",
+                "php": "^7.0"
+            },
+            "type": "metapackage",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A pack for the Doctrine annotations with cache",
+            "abandoned": true,
+            "time": "2017-06-14T23:37:05+00:00"
         },
         {
             "name": "symfony/cache",

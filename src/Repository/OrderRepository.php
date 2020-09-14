@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Client;
 use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +20,24 @@ class OrderRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Order::class);
+    }
+
+    public function getOrdersByClientId(Client $client, int $count = null, int $offset = null)
+    {
+        $qb = $this->createQueryBuilder('ord');
+
+        $qb
+            ->select('ord')
+            ->innerJoin('App\Entity\Client', 'cl', Join::WITH, 'ord.client = cl.id')
+            ->where('cl.id = :clientId')
+            ->setParameter('clientId', $client->getId())
+            ->orderBy('ord.receiveDate', 'DESC');
+        if ($count && $offset)
+        {
+            $qb->setFirstResult($offset)->setMaxResults($count);
+        }
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
     }
 
     // /**

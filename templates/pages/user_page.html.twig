@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Личная страница пользователя{% endblock %}
+
+{% block body %}
+    <img src="" alt="User photo"/>
+    <h2>{{ app.user.firstName ~ ' ' ~ app.user.lastName ~ ' ' ~ app.user.patronymic}}</h2>
+
+    <p>Всего заказов:</p>
+    <!-- Последние 3 заказа -->
+{% endblock %}

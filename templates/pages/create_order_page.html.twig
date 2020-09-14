@@ -1,0 +1,11 @@
+{% extends 'page_templates/clientpage_template.html.twig' %}
+
+{% block title %}Создать новый заказ{% endblock %}
+
+{% block content %}
+    <h1>Создание нового заказа</h1>
+
+    {{ form_start(creationForm) }}
+
+    {{ form_end(creationForm) }}
+{% endblock %}
