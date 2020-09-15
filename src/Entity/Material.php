@@ -20,9 +20,9 @@ class Material
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Service", mappedBy="materials")
+     * @ORM\ManyToMany(targetEntity="UsesMaterial", mappedBy="materials")
      */
-    private $services;
+    private $usedBy;
 
     /**
      * @ORM\Column(type="string", length=50)
@@ -34,9 +34,15 @@ class Material
      */
     private $price;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $available;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
+        $this->usedBy = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -56,43 +62,57 @@ class Material
         return $this;
     }
 
-    public function getPrice()
+    public function getPrice(): ?string
     {
         return $this->price;
     }
 
-    public function setPrice($price): self
+    public function setPrice(string $price): self
     {
         $this->price = $price;
 
         return $this;
     }
 
+    public function getAvailable(): ?float
+    {
+        return $this->available;
+    }
+
+    public function setAvailable(float $available): self
+    {
+        $this->available = $available;
+
+        return $this;
+    }
+
     /**
-     * @return Collection|Service[]
+     * @return Collection|UsesMaterial[]
      */
-    public function getServices(): Collection
+    public function getUsedBy(): Collection
     {
-        return $this->services;
+        return $this->usedBy;
     }
 
-    public function addService(Service $service): self
+    public function addUsedBy(UsesMaterial $usedBy): self
     {
-        if (!$this->services->contains($service)) {
-            $this->services[] = $service;
-            $service->addMaterial($this);
+        if (!$this->usedBy->contains($usedBy)) {
+            $this->usedBy[] = $usedBy;
+            $usedBy->addMaterial($this);
         }
 
         return $this;
     }
 
-    public function removeService(Service $service): self
+    public function removeUsedBy(UsesMaterial $usedBy): self
     {
-        if ($this->services->contains($service)) {
-            $this->services->removeElement($service);
-            $service->removeMaterial($this);
+        if ($this->usedBy->contains($usedBy)) {
+            $this->usedBy->removeElement($usedBy);
+            $usedBy->removeMaterial($this);
         }
 
         return $this;
     }
+
+
 }

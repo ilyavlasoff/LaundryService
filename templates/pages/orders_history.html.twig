@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}История заказов{% endblock %}
+
+{% block page_title %}История заказов{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        <div class="col-6">
+            {% for item in ordersHistory %}
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h4>{{ item.serviceName.name }}</h4>
+                        <ul>
+                            {% if item.active %}
+                            {% if item.completed %}
+                                <li>Статус: ожидает подтверждения</li>
+                            {% else %}
+                                <li>Статус: в работе</li>
+                            {% endif %}
+                            {% else %}
+                                <li>Статус: заврешенное</li>
+                                <li>Ваша оценка: {{ item.clientMark | default('нет') }}</li>
+                            {% endif %}
+                            <li>Стоимость: {{ item.sumPrice }} р.</li>
+                            <li>Класс сложности: {{ item.complexity.name }}</li>
+                            <li>Класс срочности: {{ item.urgency.name }}</li>
+                        </ul>
+                        <div class="row justify-content-end">
+                            {% if item.active %}
+                                <button class="btn btn-sm btn-dark mr-2 confirm-order" data-order-id="{{ item.id }}">Подтвердить</button>
+                                <button class="btn btn-sm btn-outline-dark mr-2 show-order" data-order-id="{{ item.id }}">Подробнее</button>
+                            {% else %}
+                                <button class="btn btn-sm btn-outline-secondary mr-2 show-order" data-order-id="{{ item.id }}">Подробнее</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.show-order').click(function () {
+                window.location.href = '/order/' + $(this).attr('data-order-id');
+            });
+            $('.confirm-order').click(function () {
+                let orderId = $(this).attr('data-order-id');
+                let btn = $(this);
+               $.ajax({
+                   method: 'POST',
+                   url: "{{ path('confirm_order_ajax') }}",
+                   data: {
+                       id: orderId
+                   },
+                   success: function (rawData, status) {
+                       let data = JSON.parse(rawData);
+                       if (data.success === true) {
+                           btn.removeClass('btn-dark')
+                               .removeClass('confirm-order')
+                               .addClass('btn-success')
+                               .text('Подтверждено');
+                       }
+                   },
+                   error: function (rawData, status) {
+                       let data = JSON.parse(rawData);
+                       if (data.success === true) {
+                           btn.removeClass('btn-dark')
+                               .addClass('btn-warning')
+                               .text('Возникла проблема');
+                       }
+                   }
+               })
+            });
+        });
+    </script>
+{% endblock %}

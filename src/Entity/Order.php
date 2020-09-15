@@ -29,9 +29,14 @@ class Order
     private $endingDate;
 
     /**
-     * @ORM\Column(type="date", nullable=false)
+     * @ORM\Column(type="boolean", nullable=false)
      */
     private $active;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $completed;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -102,17 +107,6 @@ class Order
         return $this;
     }
 
-    public function getActive(): ?\DateTimeInterface
-    {
-        return $this->active;
-    }
-
-    public function setActive(\DateTimeInterface $active): self
-    {
-        $this->active = $active;
-
-        return $this;
-    }
 
     public function getClientMark()
     {
@@ -197,4 +191,29 @@ class Order
 
         return $this;
     }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getCompleted(): ?bool
+    {
+        return $this->completed;
+    }
+
+    public function setCompleted(bool $completed): self
+    {
+        $this->completed = $completed;
+
+        return $this;
+    }
+
 }

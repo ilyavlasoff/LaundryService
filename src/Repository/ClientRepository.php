@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Client;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +21,13 @@ class ClientRepository extends ServiceEntityRepository
         parent::__construct($registry, Client::class);
     }
 
-    // /**
-    //  * @return Client[] Returns an array of Client objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function isClientExistsForUser(User $user) {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('COUNT(cl) as count')
+            ->from('App\Entity\Client', 'cl')
+            ->join('App\Entity\User', 'us', Join::WITH, 'cl.user = us.id')
+            ->where('us.id = :user')
+            ->setParameter('user', $user->getId());
+        return boolval($qb->getQuery()->getResult()[0]['count']);
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Client
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

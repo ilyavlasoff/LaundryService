@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,8 +97,18 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
             return new RedirectResponse($targetPath);
         }
 
-        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        /** @var UserRepository $userRepos */
+        $userRepos = $this->entityManager->getRepository(User::class);
+
+        /** @var User $user */
+        $user = $token->getUser();
+        if ($userRepos->isUserClient($user)) {
+            return new RedirectResponse($this->urlGenerator->generate('app_home'));
+        }
+        elseif ($userRepos->isUserEmployee($user)) {
+            return new RedirectResponse($this->urlGenerator->generate('display_attached_orders'));
+        }
+        return new RedirectResponse($this->urlGenerator->generate('make_client'));
     }
 
     protected function getLoginUrl()

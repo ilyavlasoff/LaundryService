@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Service;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +20,50 @@ class ServiceRepository extends ServiceEntityRepository
         parent::__construct($registry, Service::class);
     }
 
-    // /**
-    //  * @return Service[] Returns an array of Service objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function getServices($type) {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('sv')
+            ->from('App\Entity\Service', 'sv')
+            ->join('App\Entity\UsesMaterial', 'um', Join::WITH, 'sv.id = um.materials')
+            ->join('App\Entity\Material', 'mat', Join::WITH, 'mat.id = um.materials');
+        if ($type === 'available') {
+            $qb->where('um.usesQuantity <= mat.available');
+        }
+        elseif ($type === 'unavailable') {
+            $qb->where('um.usesQuantity > mat.available');
+        }
+        return $qb->getQuery()->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Service
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+    public function getAvailableServices() {
+        return $this->getServices('available');
     }
-    */
+
+    public function getUnavailableServices() {
+        return $this->getServices('unavailable');
+    }
+
+    public function getMaterialsForService(Service $service) {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('sv')
+            ->from('App\Entity\Service', 'sv')
+            ->join('App\Entity\UsesMaterial', 'um', Join::WITH, 'sv.id = um.materials')
+            ->join('App\Entity\Material', 'mat', Join::WITH, 'mat.id = um.materials')
+            ->where('sv.id = :service')
+            ->setParameter('service', $service->getId());
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getTotalSumPriceForService(Service $service)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('SUM(mat.price) as matPrice')
+            ->from('App\Entity\Service', 'sv')
+            ->join('App\Entity\UsesMaterial', 'um', Join::WITH, 'sv.id = um.materials')
+            ->join('App\Entity\Material', 'mat', Join::WITH, 'mat.id = um.materials')
+            ->where('sv.id = :service')
+            ->setParameter('service', $service->getId());
+        $materialsPrice = $qb->getQuery()->getResult()[0]['matPrice'];
+        return $materialsPrice + $service->getStandardPricing();
+    }
 }

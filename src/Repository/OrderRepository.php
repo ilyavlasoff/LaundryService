@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Client;
+use App\Entity\Employee;
 use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -40,32 +41,31 @@ class OrderRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
     }
 
-    // /**
-    //  * @return Order[] Returns an array of Order objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    public function getOrdersAttachedToEmployee(Employee $employee, string $status = 'all', string $sortFields = null) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
 
-    /*
-    public function findOneBySomeField($value): ?Order
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $qb
+            ->select('ord')
+            ->from('App\Entity\Employee', 'emp')
+            ->join('App\Entity\Order', 'ord',Join::WITH, 'emp.id = ord.employee')
+            ->where('emp.id = :employee');
+
+        if($status == 'active') {
+            $qb->andWhere('ord.completed = False');
+        } elseif ($status == 'completed') {
+            $qb->andWhere('ord.completed = True');
+        }
+
+        if ($sortFields == 'ending') {
+            $qb->orderBy('ord.endingDate');
+        } elseif ($sortFields == 'creation') {
+            $qb->orderBy('ord.receiveDate');
+        } elseif ($sortFields == 'price') {
+            $qb->orderBy('ord.sumPrice');
+        }
+
+        $qb->setParameter('employee', $employee->getId());
+
+        return $qb->getQuery()->getResult();
     }
-    */
 }

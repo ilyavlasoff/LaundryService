@@ -4,9 +4,84 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
+        <head>
+            <meta charset="UTF-8">
+            <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+            <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.js"></script>
+            <link rel="stylesheet" href="main.css"/>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        </head>
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block body %}
+            <div>
+                <div>
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                        <a class="navbar-brand" href="#">Logo</a>
+                        <div class="collapse navbar-collapse">
+                            <ul class="navbar-nav">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{{ path('order_creation') }}">Создать заказ</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('display_available_services') }}">Услуги</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('display_options_page') }}">Привилегии</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('available_materials_page') }}">Материалы</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('about_page') }}">О нас</a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ml-auto">
+                                {% if app.user %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('orders_history') }}">Мои заказы</a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            {{ app.user.email }}
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <a class="dropdown-item" href="#">Моя страница</a>
+                                            <a class="dropdown-item" href="{{ path('app_logout') }}">Выйти</a>
+                                        </div>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item">
+                                        <a class="nav-link text-light" href="{{ path('app_login') }}">Вход</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="btn btn-outline-light" href="{{ path('app_register') }}">Регистрация</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </nav>
+                    <div class="content">
+                        <div class="page-title">
+                            <h1 class="text-center page-title-text">{% block page_title %}{% endblock %}</h1>
+                        </div>
+                        {% block page_content %}{% endblock %}
+                    </div>
+                    <div class="footer">
+                        <!-- Footer -->
+                        <footer class="page-footer font-small bg-dark">
+                            <div class="footer-copyright text-center py-3 text-light">© 2020 Copyright:
+                                <a href="https://mdbootstrap.com/" class="text-light"> example.com</a>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+        {% block javascripts %}
+
+        {% endblock %}
     </body>
 </html>

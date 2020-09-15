@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Список заказов{% endblock %}
+
+{% block page_title %}Закепленные заказы{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            {{ form_start(filter, {'attr': {'class': 'form-inline'}}) }}
+            {{ form_row(filter.orderStatus, {'attr': {'class': 'form-control mr-4'}}) }}
+            {{ form_row(filter.filterParams, {'attr': {'class': 'form-control mr-4'}}) }}
+            {{ form_row(filter.filter, {'attr': {'class': 'btn btn-dark mt-4'}}) }}
+            {{ form_end(filter) }}
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-8 pt-5">
+                {% for order in orders %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6>Заказ №{{ order.id }}</h6>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

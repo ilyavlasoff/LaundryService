@@ -30,13 +30,14 @@ class Service
     private $standardPricing;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Material", inversedBy="services")
+     * @ORM\OneToMany(targetEntity="UsesMaterial", mappedBy="service")
      */
-    private $materials;
+    private $useMaterials;
 
     public function __construct()
     {
         $this->materials = new ArrayCollection();
+        $this->useMaterials = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -56,12 +57,12 @@ class Service
         return $this;
     }
 
-    public function getStandardPricing()
+    public function getStandardPricing(): ?string
     {
         return $this->standardPricing;
     }
 
-    public function setStandardPricing($standardPricing): self
+    public function setStandardPricing(string $standardPricing): self
     {
         $this->standardPricing = $standardPricing;
 
@@ -69,28 +70,35 @@ class Service
     }
 
     /**
-     * @return Collection|Material[]
+     * @return Collection|UsesMaterial[]
      */
-    public function getMaterials(): Collection
+    public function getUseMaterials(): Collection
     {
-        return $this->materials;
+        return $this->useMaterials;
     }
 
-    public function addMaterial(Material $material): self
+    public function addUseMaterial(UsesMaterial $useMaterial): self
     {
-        if (!$this->materials->contains($material)) {
-            $this->materials[] = $material;
+        if (!$this->useMaterials->contains($useMaterial)) {
+            $this->useMaterials[] = $useMaterial;
+            $useMaterial->setService($this);
         }
 
         return $this;
     }
 
-    public function removeMaterial(Material $material): self
+    public function removeUseMaterial(UsesMaterial $useMaterial): self
     {
-        if ($this->materials->contains($material)) {
-            $this->materials->removeElement($material);
+        if ($this->useMaterials->contains($useMaterial)) {
+            $this->useMaterials->removeElement($useMaterial);
+            // set the owning side to null (unless already changed)
+            if ($useMaterial->getService() === $this) {
+                $useMaterial->setService(null);
+            }
         }
 
         return $this;
     }
+
+
 }

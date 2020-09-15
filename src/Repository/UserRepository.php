@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -34,6 +35,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newEncodedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    public function isUserClient(User $user) {
+        $result = $this->getEntityManager()->createQueryBuilder()
+            ->select('COUNT(cl) as cnt')
+            ->from('App\Entity\User', 'us')
+            ->join('App\Entity\Client', 'cl', Join::WITH, 'us.id = cl.user')
+            ->where('us.id = :user')
+            ->setParameter('user',  $user->getId())
+            ->getQuery()->getResult();
+        return boolval($result[0]['cnt']);
+    }
+
+    public function isUserEmployee(User $user) {
+        $result = $this->getEntityManager()->createQueryBuilder()
+            ->select('COUNT(emp) as cnt')
+            ->from('App\Entity\User', 'us')
+            ->join('App\Entity\Employee', 'emp', Join::WITH, 'us.id = emp.user')
+            ->where('us.id = :user')
+            ->setParameter('user',  $user->getId())
+            ->getQuery()->getResult();
+        return boolval($result[0]['cnt']);
     }
 
     // /**

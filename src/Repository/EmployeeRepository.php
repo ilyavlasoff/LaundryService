@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Employee;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +20,15 @@ class EmployeeRepository extends ServiceEntityRepository
         parent::__construct($registry, Employee::class);
     }
 
-    // /**
-    //  * @return Employee[] Returns an array of Employee objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function getLessBusyEmployee() : Employee {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('emp.id, SUM(ord.sumPrice)')
+            ->from('App\Entity\Employee', 'emp')
+            ->join('App\Entity\Order', 'ord', Join::WITH, 'emp.id = ord.employee')
+            ->groupBy('emp.id')
+            ->orderBy('SUM(ord.sumPrice)')
+            ->setMaxResults(1);
+        $res = $qb->getQuery()->getResult();
+        return $this->find($res[0]['id']);
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Employee
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

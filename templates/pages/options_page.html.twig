@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Привилегии{% endblock %}
+
+{% block page_title %}Привилегии{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        <div>
+            <h4>Ускоренное обслуживание</h4>
+            <p>
+                Мы делаем свою работу не только качественно, но и быстро. Но это не значит, что мы не может делать ее еще быстрее.
+                К вашим услугам - дополнительные опции ускорения обслуживания
+            </p>
+        </div>
+        <div class="row justify-content-start">
+        {% for item in urgency %}
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+        {% endfor %}
+        </div>
+
+        <div>
+            <h4>Классы сложности</h4>
+            <p>
+                Сложные случаи - не проблема. У нас есть опции по особо сложным вещам.
+                Будьте всегда уверены в безупречности результата
+            </p>
+        </div>
+        <div class="row justify-content-start">
+        {% for item in complexity %}
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+        {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}
