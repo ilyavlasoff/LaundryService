@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -56,6 +57,7 @@ class EmployeeController extends AbstractController
         $filterForm->handleRequest($request);
 
         $renderArgs = [];
+        $renderArgs['nonav'] = true;
         $renderArgs['filter'] = $filterForm->createView();
 
         /** @var OrderRepository $orderRepos */
@@ -89,7 +91,7 @@ class EmployeeController extends AbstractController
         $entityManager = $doctrine->getManager();
         $messages = [];
 
-        $changeEndingDateForm = $this->createFormBuilder($order)
+        $changeEndingDateForm = $this->createFormBuilder()
             ->add('endingDate', DateType::class, [
                 'label' => 'Новая дата'
             ])
@@ -99,11 +101,13 @@ class EmployeeController extends AbstractController
             ->getForm();
         $changeEndingDateForm->handleRequest($request);
         if ($changeEndingDateForm->isSubmitted() && $changeEndingDateForm->isValid()) {
+            $order->setEndingDate($changeEndingDateForm->get('endingDate')->getData());
             $entityManager->persist($order);
             $entityManager->flush();
+            $messages[] = 'Дата успешно изменена';
         }
 
-        $changeComplexityForm = $this->createFormBuilder($order)
+        $changeComplexityForm = $this->createFormBuilder()
             ->add('complexity', EntityType::class, [
                 'label' => 'Сложность',
                 'class' => Complexity::class,
@@ -115,17 +119,21 @@ class EmployeeController extends AbstractController
             ->getForm();
         $changeComplexityForm->handleRequest($request);
         if ($changeComplexityForm->isSubmitted() && $changeComplexityForm->isValid()) {
+            $order->setComplexity($changeComplexityForm->get('complexity')->getData());
             $entityManager->persist($order);
             $entityManager->flush();
+            $messages[] = 'Характеристика успешно изменена';
         }
 
-        $confirmOrderCompleted = $this->createFormBuilder($order)
+        $confirmOrderCompleted = $this->createFormBuilder()
             ->add('confirmCompleted', SubmitType::class, [
                 'label' => 'Подтвердить выполнение'
             ])
             ->getForm();
+        $confirmOrderCompleted->handleRequest($request);
         if ($confirmOrderCompleted->isSubmitted() && $confirmOrderCompleted->isValid()) {
             $order->setCompleted(true);
+            return new RedirectResponse($this->generateUrl('display_attached_orders'));
         }
 
         return $this->render('pages/employee_order_page.html.twig', [
@@ -135,7 +143,8 @@ class EmployeeController extends AbstractController
             'order' => $order,
             'service' => $service,
             'materials' => $materials,
-            'messages' => $messages
+            'messages' => $messages,
+            'nonav' => true
         ]);
     }
 }

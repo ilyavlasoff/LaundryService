@@ -2,27 +2,85 @@
 
 {% block title %}Список заказов{% endblock %}
 
-{% block page_title %}Закепленные заказы{% endblock %}
+{% block page_title %}Заказ № {{ order.id }}{% endblock %}
 
 {% block page_content %}
     <div class="container">
-        <div class="row justify-content-center">
-            {{ form_start(filter) }}
-            {{ form_row(filter.orderStatus, {'attr': {'class': 'form-control'}}) }}
-            {{ form_row(filter.filterParams, {'attr': {'class': 'form-control'}}) }}
-            {{ form_row(filter.filter, {'attr': {'class': 'btn btn-dark'}}) }}
-            {{ form_end(filter) }}
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-8">
-                {% for order in orders %}
-                    <div class="card">
-                        <div class="card-body">
-                            <h6>Заказ №{{ order.id }}</h6>
-                        </div>
-                    </div>
-                {% endfor %}
+        {% if messages | length %}
+            <div class="alert alert-success" role="alert">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="row justify-content-center mb-5 mt-5">
+            <div class="card col-3 mr-2">
+                <div class="card-body">
+                    <h4>Заказ</h4>
+                    {% if order.active %}
+                        {% if order.completed %}
+                            <p>Статус: ожидает подтверждения</p>
+                        {% else %}
+                            <p>Статус: в работе</p>
+                        {% endif %}
+                    {% else %}
+                        <p>Статус: завершенное</p>
+                    {% endif %}
+                    <p>Дата получения: {{ order.receiveDate | date('Y-m-d') }}</p>
+                    <p>Дата возврата: {{ order.endingDate | date('Y-m-d') }}</p>
+                    <p>Категория срочности: {{ order.urgency.id }}</p>
+                    <p>Категория сложности: {{ order.complexity.id }}</p>
+                </div>
+            </div>
+            <div class="card col-3 mr-2">
+                <div class="card-body">
+                    <h4>Услуга</h4>
+                    <p>ID услуги: {{ service.id }}</p>
+                    <p>Наименование услуги: {{ service.id }}</p>
+                    <p>Материалы: </p>
+                    <ul>
+                        {% for material in materials %}
+                            <li>{{ material.id }}: {{ material.name }} - {{ material.usesQuantity }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="card col-3">
+                <div class="card-body">
+                    <h4>Заказчик</h4>
+                    <p>ФИО: {{ order.client.firstName ~ ' ' ~ order.client.lastName ~ ' ' ~ order.client.patronymic }}</p>
+                    <p>Телефон: {{ order.client.phone }}</p>
+                </div>
             </div>
         </div>
+        <div class="row justify-content-center">
+            <div class="card col-5">
+                <div class="card-body">
+                    <h5>Изменить дату получения</h5>
+                    {{ form_start(changeEndingDateForm) }}
+                        {{ form_row(changeEndingDateForm.endingDate, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_row(changeEndingDateForm.submit, {'attr': {'class': 'btn btn-dark btn-sm mt-3'}}) }}
+                    {{ form_end(changeEndingDateForm) }}
+                </div>
+            </div>
+            <div class="card col-5 ml-5">
+                <div class="card-body">
+                    <h5>Изменить категорию сложности</h5>
+                    {{ form_start(changeComplexityForm) }}
+                        {{ form_row(changeComplexityForm.complexity, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_row(changeComplexityForm.submit, {'attr': {'class': 'btn btn-dark btn-sm mt-3'}}) }}
+                    {{ form_end(changeComplexityForm) }}
+                </div>
+            </div>
+        </div>
+        {% if not order.completed %}
+            <div class="row justify-content-center mt-3 mb-5">
+                {{ form_start(confirmOrderCompleted) }}
+                {{ form_row(confirmOrderCompleted.confirmCompleted, {'attr': {'class': 'btn btn-dark btn-lg mt-3'}}) }}
+                {{ form_end(confirmOrderCompleted) }}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

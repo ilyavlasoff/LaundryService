@@ -45,7 +45,7 @@ class ServiceRepository extends ServiceEntityRepository
 
     public function getMaterialsForService(Service $service) {
         $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('sv')
+            ->select('mat.id, mat.name, um.usesQuantity')
             ->from('App\Entity\Service', 'sv')
             ->join('App\Entity\UsesMaterial', 'um', Join::WITH, 'sv.id = um.materials')
             ->join('App\Entity\Material', 'mat', Join::WITH, 'mat.id = um.materials')

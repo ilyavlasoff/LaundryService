@@ -22,33 +22,37 @@
                         <a class="navbar-brand" href="#">Logo</a>
                         <div class="collapse navbar-collapse">
                             <ul class="navbar-nav">
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="{{ path('order_creation') }}">Создать заказ</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('display_available_services') }}">Услуги</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('display_options_page') }}">Привилегии</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('available_materials_page') }}">Материалы</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('about_page') }}">О нас</a>
-                                </li>
+                                {% if nonav is not defined %}
+                                    <li class="nav-item active">
+                                        <a class="nav-link" href="{{ path('order_creation') }}">Создать заказ</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('display_available_services') }}">Услуги</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('display_options_page') }}">Привилегии</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('available_materials_page') }}">Материалы</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('about_page') }}">О нас</a>
+                                    </li>
+                                {% endif %}
                             </ul>
                             <ul class="navbar-nav ml-auto">
                                 {% if app.user %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('orders_history') }}">Мои заказы</a>
-                                    </li>
+                                    {% if nonav is not defined %}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('orders_history') }}">Мои заказы</a>
+                                        </li>
+                                    {% endif %}
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             {{ app.user.email }}
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                            <a class="dropdown-item" href="#">Моя страница</a>
+                                            <a class="dropdown-item" href="{{ path('my_page') }}">Моя страница</a>
                                             <a class="dropdown-item" href="{{ path('app_logout') }}">Выйти</a>
                                         </div>
                                     </li>
@@ -64,7 +68,7 @@
                         </div>
                     </nav>
                     <div class="content">
-                        <div class="page-title">
+                        <div class="page-title mt-5">
                             <h1 class="text-center page-title-text">{% block page_title %}{% endblock %}</h1>
                         </div>
                         {% block page_content %}{% endblock %}

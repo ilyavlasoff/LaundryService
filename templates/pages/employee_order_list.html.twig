@@ -2,7 +2,7 @@
 
 {% block title %}Список заказов{% endblock %}
 
-{% block page_title %}Закепленные заказы{% endblock %}
+{% block page_title %}Закрепленные заказы{% endblock %}
 
 {% block page_content %}
     <div class="container">
@@ -17,12 +17,32 @@
             <div class="col-8 pt-5">
                 {% for order in orders %}
                     <div class="card mb-3">
-                        <div class="card-body">
-                            <h6>Заказ №{{ order.id }}</h6>
+                        <div class="card-body row">
+                            <div class="col-10">
+                                <h6>Заказ №{{ order.id }}</h6>
+                                <ul>
+                                    <li>Услуга: {{ order.serviceName.name }}</li>
+                                    <li>Принят: {{ order.receiveDate| date ('Y-m-d')}}</li>
+                                    <li>Выполнить до: {{ order.endingDate| date ('Y-m-d') }}</li>
+                                </ul>
+                            </div>
+                            <div class="col">
+                                <button type="button" data-order-id="{{ order.id }}" class="btn btn-sm btn-dark view-full-order">Просмотр</button>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.view-full-order').click(function () {
+               window.location.href = '/employee/order/' + $(this).attr('data-order-id');
+            });
+        });
+    </script>
 {% endblock %}
