@@ -15,12 +15,12 @@
         </div>
         <div class="row justify-content-start">
         {% for item in urgency %}
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
+                <div style="width: 18rem;" class="card col-4 pr-2 mb-2">
+                    <img class="card-img-top" src="{{ item.image }}" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">{{ item.name }}</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <p class="card-text">{{ item.description }}</p>
+                        <a href="{{ path('order_creation', {'urgency': item.id}) }}" class="btn btn-primary">Выбрать</a>
                     </div>
                 </div>
         {% endfor %}
@@ -35,12 +35,12 @@
         </div>
         <div class="row justify-content-start">
         {% for item in complexity %}
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
+                <div style="width: 18rem;" class="card col-4 pr-2 mb-2">
+                    <img class="card-img-top" src="{{ item.image }}" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">{{ item.name }}</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <p class="card-text">{{ item.description }}</p>
+                        <a href="{{ path('order_creation', {'complexity': item.id}) }}" class="btn btn-primary">Выбрать</a>
                     </div>
                 </div>
         {% endfor %}

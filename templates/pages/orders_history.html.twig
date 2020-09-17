@@ -6,18 +6,18 @@
 
 {% block page_content %}
     <div class="container">
-        <div class="col-6">
+        <div class="row justify-content-center">
             {% for item in ordersHistory %}
-                <div class="card mt-4">
+                <div class="card mt-4 col-8">
                     <div class="card-body">
                         <h4>{{ item.serviceName.name }}</h4>
                         <ul>
                             {% if item.active %}
-                            {% if item.completed %}
-                                <li>Статус: ожидает подтверждения</li>
-                            {% else %}
-                                <li>Статус: в работе</li>
-                            {% endif %}
+                                {% if item.completed %}
+                                    <li>Статус: ожидает подтверждения</li>
+                                {% else %}
+                                    <li>Статус: в работе</li>
+                                {% endif %}
                             {% else %}
                                 <li>Статус: завершенное</li>
                                 <li>Ваша оценка: {{ item.clientMark | default('нет') }}</li>

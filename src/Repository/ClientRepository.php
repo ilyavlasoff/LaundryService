@@ -30,4 +30,33 @@ class ClientRepository extends ServiceEntityRepository
             ->setParameter('user', $user->getId());
         return boolval($qb->getQuery()->getResult()[0]['count']);
     }
+
+    public function getUserOrdersProperties(Client $client, $period = null) {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('COUNT(ord) as count, SUM(ord.sumPrice) as sumPrice')
+            ->from('App\Entity\Client', 'cl')
+            ->join('App\Entity\Order', 'ord', Join::WITH, 'cl.id = ord.client')
+            ->where('cl.id = :client')
+            ->setParameter('client', $client->getId());
+        if ($period == 'month')
+        {
+            $qb
+                ->andWhere('ord.receiveDate BETWEEN :start AND :end')
+                ->setParameter('start', (new \DateTime('now'))->format('Y-m') . '-01')
+                ->setParameter('end', (new \DateTime('now'))->format('Y-m-d'));
+        }
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getLastNOrdersOfClient(Client $client, int $count) {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('ord')
+            ->from('App\Entity\Client', 'cl')
+            ->join('App\Entity\Order', 'ord', Join::WITH, 'cl.id = ord.client')
+            ->where('cl.id = :client')
+            ->orderBy('ord.receiveDate', 'DESC')
+            ->setMaxResults($count)
+            ->setParameter('client', $client->getId())
+            ->getQuery()->getResult();
+    }
 }

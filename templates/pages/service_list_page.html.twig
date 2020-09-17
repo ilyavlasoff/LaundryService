@@ -9,12 +9,12 @@
         {% if available | length %}
             <div class="row justify-content-start">
                 {% for service in available %}
-                    <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card col-4 mb-2" style="width: 18rem;">
+                        <img class="card-img-top" src="{{ service.image }}" alt="Card image cap">
                         <div class="card-body">
                             <h5 class="card-title">{{ service.name }}</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                            <p class="card-text">{{ service.description }}</p>
+                            <a href="{{ path('order_creation', {'service' : service.id}) }}" class="btn btn-primary">Выбрать</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -29,12 +29,12 @@
             </p>
             <div class="row justify-content-start">
                 {% for service in unavailable %}
-                    <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card col-4 mb-2" style="width: 18rem;">
+                        <img class="card-img-top" src="{{ service.image }}" alt="Card image cap">
                         <div class="card-body">
                             <h5 class="card-title">{{ service.name }}</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary" disabled>Go somewhere</a>
+                            <p class="card-text">{{ service.description }}</p>
+                            <a href="#" class="btn btn-primary" disabled>Выбрать</a>
                         </div>
                     </div>
                 {% endfor %}

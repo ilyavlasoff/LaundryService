@@ -5,5 +5,44 @@
 {% block page_title %}Заказ №{{ order.id }}{% endblock %}
 
 {% block page_content %}
-
+    <div class="container">
+        <div class="row justify-content-start">
+            <div class="col-6 mb-3">
+                <h3>Информация о заказе</h3>
+                <ul>
+                    <li>Идентификатор заказа: {{ order.id }}</li>
+                    <li>Стоимость заказа: {{ order.sumPrice }}</li>
+                    <li>Дата создания заказа: {{ order.receiveDate | date('Y-m-d') }}</li>
+                    <li>Дата выполнения заказа: {{ order.endingDate | date('Y-m-d') }}</li>
+                    <li>Завершено: {{ order.active ? 'да' : 'нет' }}</li>
+                    <li>Выполнено: {{ order.completed ? 'да' : 'нет' }}</li>
+                    <li>Оценка: {{ order.clientMark | default('нет') }}</li>
+                </ul>
+            </div>
+            <div class="col-6 mb-3">
+                <h3>Информация об услуге</h3>
+                <ul>
+                    <li>Наименование услуги: {{ order.serviceName.name }}</li>
+                    <li>Цена услуги: {{ order.serviceName.standardPricing }}</li>
+                </ul>
+            </div>
+            <div class="col-6 mb-3">
+                <h3>Информация о материалах</h3>
+                <p>Материалы, используемых при выполнении услуги</p>
+                <ul>
+                    {% for material in materials %}
+                        <li>{{ material.name ~ '- ' ~ material.price ~ 'p.'}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-6 mb-3">
+                <h3>Информация о исполнителе</h3>
+                <p>Информация о сотруднике исполнителе</p>
+                <ul>
+                    <li>ФИО: {{ employee.lastName ~ ' ' ~ employee.firstName }}</li>
+                    <li>Телефон: {{ employee.phone | default('нет') }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endblock %}

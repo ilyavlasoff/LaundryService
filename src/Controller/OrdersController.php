@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Complexity;
 use App\Entity\Employee;
 use App\Entity\Material;
 use App\Entity\Order;
 use App\Entity\Service;
+use App\Entity\Urgency;
 use App\Entity\User;
 use App\Form\OrderCreationForm;
 use App\Repository\EmployeeRepository;
@@ -67,6 +69,37 @@ class OrdersController extends AbstractController
             return $this->render('pages/order_success.html.twig', [
                 'order' => $order
             ]);
+        }
+        else {
+            $complexityId = $request->query->get('complexity');
+            $urgencyId = $request->query->get('urgency');
+            $serviceId = $request->query->get('service');
+
+            $doctrine = $this->getDoctrine();
+            if ($complexityId) {
+                $complexityRepos = $doctrine->getRepository(Complexity::class);
+                /** @var Complexity $complexityItem */
+                $complexityItem = $complexityRepos->find($complexityId);
+                if ($complexityItem) {
+                    $creationForm->get('complexity')->setData($complexityItem);
+                }
+            }
+            if ($urgencyId) {
+                $urgencyRepos = $doctrine->getRepository(Urgency::class);
+                /** @var Urgency $complexityItem */
+                $urgencyItem = $urgencyRepos->find($urgencyId);
+                if ($urgencyItem) {
+                    $creationForm->get('urgency')->setData($urgencyItem);
+                }
+            }
+            if ($serviceId) {
+                $serviceRepos = $doctrine->getRepository(Service::class);
+                /** @var Service $complexityItem */
+                $serviceItem = $serviceRepos->find($serviceId);
+                if ($serviceItem) {
+                    $creationForm->get('serviceName')->setData($serviceItem);
+                }
+            }
         }
 
         return $this->render('pages/create_order_page.html.twig', [

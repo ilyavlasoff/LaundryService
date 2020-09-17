@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200915105950 extends AbstractMigration
+final class Version20200917055111 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -30,7 +30,7 @@ final class Version20200915105950 extends AbstractMigration
         $this->addSql('CREATE SEQUENCE "user_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE client (id INT NOT NULL, client_user INT NOT NULL, phone VARCHAR(11) NOT NULL, registration_date DATE NOT NULL, is_permanent BOOLEAN NOT NULL, first_name VARCHAR(50) NOT NULL, last_name VARCHAR(50) DEFAULT NULL, patronymic VARCHAR(50) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_C74404555C0F152B ON client (client_user)');
-        $this->addSql('CREATE TABLE complexity (id INT NOT NULL, name VARCHAR(20) NOT NULL, pricing_coefficient DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE complexity (id INT NOT NULL, name VARCHAR(20) NOT NULL, pricing_coefficient DOUBLE PRECISION NOT NULL, description VARCHAR(255) NOT NULL, image VARCHAR(100) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE employee (id INT NOT NULL, employee_user INT DEFAULT NULL, passport VARCHAR(10) NOT NULL, salary NUMERIC(10, 0) NOT NULL, first_name VARCHAR(50) NOT NULL, last_name VARCHAR(50) NOT NULL, patronymic VARCHAR(50) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_5D9F75A1384A9C0E ON employee (employee_user)');
         $this->addSql('CREATE TABLE material (id INT NOT NULL, name VARCHAR(50) NOT NULL, price NUMERIC(10, 0) NOT NULL, available DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
@@ -40,8 +40,8 @@ final class Version20200915105950 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_F529939817E73399 ON "order" (order_service)');
         $this->addSql('CREATE INDEX IDX_F5299398BC679710 ON "order" (order_employee)');
         $this->addSql('CREATE INDEX IDX_F52993984CB1480 ON "order" (order_client)');
-        $this->addSql('CREATE TABLE service (id INT NOT NULL, name VARCHAR(50) NOT NULL, standard_pricing NUMERIC(10, 0) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE urgency (id INT NOT NULL, name VARCHAR(20) NOT NULL, pricing_coefficient DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE service (id INT NOT NULL, name VARCHAR(50) NOT NULL, standard_pricing NUMERIC(10, 0) NOT NULL, description VARCHAR(255) NOT NULL, image VARCHAR(100) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE urgency (id INT NOT NULL, name VARCHAR(20) NOT NULL, pricing_coefficient DOUBLE PRECISION NOT NULL, description VARCHAR(255) NOT NULL, image VARCHAR(100) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE "user" (id INT NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
         $this->addSql('CREATE TABLE uses_material (service_id INT NOT NULL, materials_id INT NOT NULL, uses_quantity DOUBLE PRECISION NOT NULL, PRIMARY KEY(service_id, materials_id))');

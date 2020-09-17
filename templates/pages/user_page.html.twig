@@ -2,10 +2,98 @@
 
 {% block title %}Личная страница пользователя{% endblock %}
 
-{% block body %}
+{% block page_title %}{{ client.lastName ~ ' ' ~ client.firstName ~ ' ' ~ client.patronymic | default('') }}{% endblock %}
 
-    <h2>{{ app.user.firstName ~ ' ' ~ app.user.lastName ~ ' ' ~ app.user.patronymic}}</h2>
-
-    <p>Всего заказов:</p>
-    <!-- Последние 3 заказа -->
+{% block page_content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="row-6">
+                <h4>Информация о пользователе</h4>
+                <ul>
+                    <li>E-mail: {{ app.user.email }}</li>
+                    <li>Фамилия: {{ client.firstName }}</li>
+                    <li>Имя: {{ client.lastName }}</li>
+                    <li>Отчество: {{ client.patronymic }}</li>
+                    <li>Дата регистрации: {{ client.registrationDate | date('Y-m-d') }}</li>
+                    <li>Общее количество заказов: {{ ordersTotalCount }}</li>
+                    <li>Общая сумма заказов: {{ ordersTotalSum }}</li>
+                    <li>Количество заказов за последний месяц: {{ ordersMonthCount }}</li>
+                    <li>Сумма заказов за последний месяц: {{ ordersMonthSum }}</li>
+                </ul>
+                <br>
+            </div>
+        </div>
+        <div class="row-9 justify-content-center mt-4 mb-5">
+            <div class="row-12">
+                <h4 class="text-center">Последние заказы</h4>
+                {% for item in lastOrders %}
+                    <div class="card mt-4 col-12">
+                        <div class="card-body">
+                            <h4>{{ item.serviceName.name }}</h4>
+                            <ul>
+                                {% if item.active %}
+                                    {% if item.completed %}
+                                        <li>Статус: ожидает подтверждения</li>
+                                    {% else %}
+                                        <li>Статус: в работе</li>
+                                    {% endif %}
+                                {% else %}
+                                    <li>Статус: завершенное</li>
+                                    <li>Ваша оценка: {{ item.clientMark | default('нет') }}</li>
+                                {% endif %}
+                                <li>Стоимость: {{ item.sumPrice }} р.</li>
+                                <li>Класс сложности: {{ item.complexity.name }}</li>
+                                <li>Класс срочности: {{ item.urgency.name }}</li>
+                            </ul>
+                            <div class="row justify-content-end">
+                                {% if item.active %}
+                                    <button class="btn btn-sm btn-dark mr-2 confirm-order" data-order-id="{{ item.id }}">Подтвердить</button>
+                                    <button class="btn btn-sm btn-outline-dark mr-2 show-order" data-order-id="{{ item.id }}">Подробнее</button>
+                                {% else %}
+                                    <button class="btn btn-sm btn-outline-secondary mr-2 show-order" data-order-id="{{ item.id }}">Подробнее</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.show-order').click(function () {
+                window.location.href = '/order/' + $(this).attr('data-order-id');
+            });
+            $('.confirm-order').click(function () {
+                let orderId = $(this).attr('data-order-id');
+                let btn = $(this);
+                $.ajax({
+                    method: 'POST',
+                    url: "{{ path('confirm_order_ajax') }}",
+                    data: {
+                        id: orderId
+                    },
+                    success: function (rawData, status) {
+                        let data = JSON.parse(rawData);
+                        if (data.success === true) {
+                            btn.removeClass('btn-dark')
+                                .removeClass('confirm-order')
+                                .addClass('btn-success')
+                                .text('Подтверждено');
+                        }
+                    },
+                    error: function (rawData, status) {
+                        let data = JSON.parse(rawData);
+                        if (data.success === true) {
+                            btn.removeClass('btn-dark')
+                                .addClass('btn-warning')
+                                .text('Возникла проблема');
+                        }
+                    }
+                })
+            });
+        });
+    </script>
 {% endblock %}

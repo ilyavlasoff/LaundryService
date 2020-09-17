@@ -20,7 +20,7 @@ class Material
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="UsesMaterial", mappedBy="materials")
+     * @ORM\OneToMany(targetEntity="UsesMaterial", mappedBy="materials")
      */
     private $usedBy;
 

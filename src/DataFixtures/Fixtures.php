@@ -133,6 +133,8 @@ class Fixtures extends Fixture implements ContainerAwareInterface
             $compl = new Complexity();
             $compl->setName($key);
             $compl->setPricingCoefficient($value);
+            $compl->setDescription("This is description for complexity mode $value");
+            $compl->setImage('1.jpg');
             $compls[] = $compl;
             $manager->persist($compl);
             $manager->flush();
@@ -143,6 +145,8 @@ class Fixtures extends Fixture implements ContainerAwareInterface
             $urg = new Urgency();
             $urg->setName($key);
             $urg->setPricingCoefficient($value);
+            $urg->setDescription("This is description for urgency mode $value");
+            $urg->setImage('1.jpg');
             $urgencies[] = $urg;
             $manager->persist($urg);
             $manager->flush();
@@ -164,7 +168,8 @@ class Fixtures extends Fixture implements ContainerAwareInterface
             $service = new Service();
             $service->setName("Service $i");
             $service->setStandardPricing(random_int(200, 2000));
-            $step = random_int(1, 10);
+            $service->setDescription("This is description for service $i");
+            $service->setImage('1.jpg');
             $services[] = $service;
             $manager->persist($service);
             $manager->flush();
