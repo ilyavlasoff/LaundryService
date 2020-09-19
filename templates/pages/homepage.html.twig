@@ -2,8 +2,24 @@
 
 {% block title %}Сервис химчистки{% endblock %}
 
-{% block page_title %}{% endblock %}
+{% block page_title %}Сервис химчистки{% endblock %}
 
 {% block page_content %}
-
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <img src="about_company.png" alt="logo">
+        <p class="mt-5">
+            Добро пожаловать в сервис химчистки. Мы стараемся обеспечить наиболее качественный уровень обслуживания по оптимальным ценам
+            <br>
+            Для начала воспользуйтесь кнопками внизу или на навигационной панели
+        </p>
+        <div class="col-5 mt-5">
+            <div class="row justify-content-center">
+                <button class="btn btn-dark btn-lg mr-3" onclick="window.location.href = '{{ path('app_login') }}'">Логин</button>
+                <button class="btn btn-dark btn-lg mr-3" onclick="window.location.href = '{{ path('app_register') }}'">Регистрация</button>
+                <button class="btn btn-dark btn-lg" onclick="window.location.href = '{{ path('display_available_services') }}'">Список услуг</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
