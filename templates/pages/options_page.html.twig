@@ -40,7 +40,8 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ item.name }}</h5>
                         <p class="card-text">{{ item.description }}</p>
-                        <a href="{{ path('order_creation', {'complexity': item.id}) }}" class="btn btn-primary">Выбрать</a>
+                        <a href="{{ path('
+', {'complexity': item.id}) }}" class="btn btn-primary">Выбрать</a>
                     </div>
                 </div>
         {% endfor %}
